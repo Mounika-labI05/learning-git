@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-card h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        #loginForm {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .welcome-section {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .welcome-section h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .user-info {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .user-info p {
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .username-display {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 12px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-card">
+            <!-- Login Form -->
+            <div id="loginForm">
+                <h1>Login</h1>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <div class="error-message" id="errorMessage">Please fill in all fields</div>
+                <button class="login-btn" onclick="handleLogin()">Login</button>
+            </div>
+
+            <!-- Welcome Section -->
+            <div class="welcome-section" id="welcomeSection">
+                <h1>Welcome!</h1>
+                <div class="user-info">
+                    <p>Hello</p>
+                    <p class="username-display" id="displayUsername"></p>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleLogin() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Validate inputs
+            if (username === '' || password === '') {
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            // Hide error message
+            errorMessage.style.display = 'none';
+
+            // Hide login form
+            document.getElementById('loginForm').style.display = 'none';
+
+            // Show welcome section
+            document.getElementById('displayUsername').textContent = username + '!';
+            document.getElementById('welcomeSection').style.display = 'block';
+
+            // Store username in session (for demo purposes)
+            sessionStorage.setItem('loggedInUser', username);
+        }
+
+        function handleLogout() {
+            // Clear session
+            sessionStorage.removeItem('loggedInUser');
+
+            // Show login form
+            document.getElementById('loginForm').style.display = 'flex';
+
+            // Hide welcome section
+            document.getElementById('welcomeSection').style.display = 'none';
+
+            // Clear inputs
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        // Check if user is already logged in when page loads
+        window.addEventListener('load', function() {
+            const loggedInUser = sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('displayUsername').textContent = loggedInUser + '!';
+                document.getElementById('welcomeSection').style.display = 'block';
+            }
+        });
+
+        // Allow Enter key to submit login form
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && document.getElementById('loginForm').style.display !== 'none') {
+                handleLogin();
+            }
+        });
+    </script>
+</body>
+</html>
